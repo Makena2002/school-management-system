@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Classrooms{% endblock %}
+{% block content %}
+<h2>Classrooms</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Class Teacher</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for classroom in classrooms %}
+        <tr>
+            <td>{{ classroom.name }}</td>
+            <td>
+                {% if classroom.class_teacher %}
+                    {{ classroom.class_teacher.user.get_full_name|default:classroom.class_teacher.user.username }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

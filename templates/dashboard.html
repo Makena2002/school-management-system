@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.username }}</h2>
+<p>Your role: <strong>{{ user.role }}</strong></p>
+
+{% if user.role == 'ADMIN' %}
+<div class="list-group" style="max-width: 400px;">
+    <a href="{% url 'student_list' %}" class="list-group-item list-group-item-action">Manage Students</a>
+    <a href="{% url 'teacher_list' %}" class="list-group-item list-group-item-action">Manage Teachers</a>
+    <a href="{% url 'classroom_list' %}" class="list-group-item list-group-item-action">Manage Classrooms</a>
+    <a href="{% url 'subject_list' %}" class="list-group-item list-group-item-action">Manage Subjects</a>
+</div>
+{% elif user.role == 'TEACHER' %}
+<div class="list-group" style="max-width: 400px;">
+    <a href="{% url 'mark_attendance' %}" class="list-group-item list-group-item-action">Mark Attendance</a>
+    <a href="{% url 'enter_results' %}" class="list-group-item list-group-item-action">Enter Results</a>
+</div>
+{% elif user.role == 'STUDENT' %}
+<div class="list-group" style="max-width: 400px;">
+    <a href="{% url 'my_attendance' %}" class="list-group-item list-group-item-action">My Attendance</a>
+    <a href="{% url 'my_results' %}" class="list-group-item list-group-item-action">My Results</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Enter Results{% endblock %}
+{% block content %}
+<h2>Enter Results — {{ term }}</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if subjects %}
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Subject</label>
+        <select name="subject" class="form-select" style="max-width: 300px;">
+            {% for subject in subjects %}
+            <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Admission No.</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.user.get_full_name|default:student.user.username }}</td>
+                <td>{{ student.admission_number }}</td>
+                <td><input type="number" step="0.01" min="0" max="100" name="score_{{ student.id }}" class="form-control form-control-sm" style="max-width: 100px;"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Save Results</button>
+</form>
+{% else %}
+<p>You are not assigned to any subjects.</p>
+{% endif %}
+{% endblock %}
