@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Parents{% endblock %}
+{% block content %}
+<h2><i class="bi bi-person-hearts me-2"></i>Parents</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Children</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for parent in parents %}
+        <tr>
+            <td>{{ parent.user.get_full_name|default:parent.user.username }}</td>
+            <td>
+                {% for child in parent.children.all %}
+                    {{ child.user.get_full_name|default:child.user.username }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    —
+                {% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">No parents added yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

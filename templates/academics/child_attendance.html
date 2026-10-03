@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ student.user.username }}'s Attendance{% endblock %}
+{% block content %}
+<h2>Attendance — {{ student.user.get_full_name|default:student.user.username }}</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.date }}</td>
+            <td>{{ record.get_status_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">No attendance records yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

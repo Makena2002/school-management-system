@@ -1,25 +1,105 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.username }}</h2>
-<p>Your role: <strong>{{ user.role }}</strong></p>
+<div class="mb-4">
+    <h2 class="fw-bold">Welcome, {{ user.username }}</h2>
+    <span class="badge bg-primary fs-6">{{ user.role }}</span>
+</div>
 
 {% if user.role == 'ADMIN' %}
-<div class="list-group" style="max-width: 400px;">
-    <a href="{% url 'student_list' %}" class="list-group-item list-group-item-action">Manage Students</a>
-    <a href="{% url 'teacher_list' %}" class="list-group-item list-group-item-action">Manage Teachers</a>
-    <a href="{% url 'classroom_list' %}" class="list-group-item list-group-item-action">Manage Classrooms</a>
-    <a href="{% url 'subject_list' %}" class="list-group-item list-group-item-action">Manage Subjects</a>
+<div class="row g-3">
+    <div class="col-md-3">
+        <a href="{% url 'student_list' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-people-fill fs-1 text-primary"></i>
+                <h5 class="card-title mt-2">Students</h5>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'teacher_list' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-person-badge-fill fs-1 text-success"></i>
+                <h5 class="card-title mt-2">Teachers</h5>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'classroom_list' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-door-open-fill fs-1 text-warning"></i>
+                <h5 class="card-title mt-2">Classrooms</h5>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'subject_list' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-book-fill fs-1 text-danger"></i>
+                <h5 class="card-title mt-2">Subjects</h5>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'parent_list' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-person-hearts fs-1 text-info"></i>
+                <h5 class="card-title mt-2">Parents</h5>
+            </div>
+        </a>
+    </div>
 </div>
+
 {% elif user.role == 'TEACHER' %}
-<div class="list-group" style="max-width: 400px;">
-    <a href="{% url 'mark_attendance' %}" class="list-group-item list-group-item-action">Mark Attendance</a>
-    <a href="{% url 'enter_results' %}" class="list-group-item list-group-item-action">Enter Results</a>
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{% url 'mark_attendance' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-calendar-check-fill fs-1 text-primary"></i>
+                <h5 class="card-title mt-2">Mark Attendance</h5>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{% url 'enter_results' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clipboard-data-fill fs-1 text-success"></i>
+                <h5 class="card-title mt-2">Enter Results</h5>
+            </div>
+        </a>
+    </div>
 </div>
+
 {% elif user.role == 'STUDENT' %}
-<div class="list-group" style="max-width: 400px;">
-    <a href="{% url 'my_attendance' %}" class="list-group-item list-group-item-action">My Attendance</a>
-    <a href="{% url 'my_results' %}" class="list-group-item list-group-item-action">My Results</a>
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{% url 'my_attendance' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-calendar-check-fill fs-1 text-primary"></i>
+                <h5 class="card-title mt-2">My Attendance</h5>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{% url 'my_results' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clipboard-data-fill fs-1 text-success"></i>
+                <h5 class="card-title mt-2">My Results</h5>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% elif user.role == 'PARENT' %}
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{% url 'parent_children' %}" class="card text-decoration-none shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-people-fill fs-1 text-primary"></i>
+                <h5 class="card-title mt-2">My Children</h5>
+            </div>
+        </a>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

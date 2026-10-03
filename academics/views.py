@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-from .models import Student, Teacher, ClassRoom, Subject, Attendance, Result
+from .models import Student, Teacher, ClassRoom, Subject, Attendance, Result, Announcement, Parent
 
 
 def is_admin(user):
@@ -15,6 +15,10 @@ def is_teacher(user):
 
 def is_student(user):
     return user.is_authenticated and user.role == 'STUDENT'
+
+
+def is_parent(user):
+    return user.is_authenticated and user.role == 'PARENT'
 
 
 @login_required
@@ -43,6 +47,13 @@ def classroom_list(request):
 def subject_list(request):
     subjects = Subject.objects.all()
     return render(request, 'academics/subject_list.html', {'subjects': subjects})
+
+
+@login_required
+@user_passes_test(is_admin)
+def parent_list(request):
+    parents = Parent.objects.select_related('user').prefetch_related('children__user').all()
+    return render(request, 'academics/parent_list.html', {'parents': parents})
 
 
 @login_required
@@ -123,3 +134,48 @@ def my_results(request):
     student = Student.objects.get(user=request.user)
     records = Result.objects.filter(student=student).select_related('subject').order_by('-term')
     return render(request, 'academics/my_results.html', {'records': records})
+
+
+@login_required
+def announcement_list(request):
+    announcements = Announcement.objects.select_related('posted_by').all()
+    return render(request, 'academics/announcement_list.html', {'announcements': announcements})
+
+
+@login_required
+@user_passes_test(is_admin)
+def post_announcement(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        message = request.POST.get('message')
+        if title and message:
+            Announcement.objects.create(title=title, message=message, posted_by=request.user)
+            messages.success(request, "Announcement posted.")
+            return redirect('announcement_list')
+    return render(request, 'academics/post_announcement.html')
+
+
+@login_required
+@user_passes_test(is_parent)
+def parent_children(request):
+    parent = Parent.objects.get(user=request.user)
+    children = parent.children.select_related('user', 'classroom').all()
+    return render(request, 'academics/parent_children.html', {'children': children})
+
+
+@login_required
+@user_passes_test(is_parent)
+def child_attendance(request, student_id):
+    parent = Parent.objects.get(user=request.user)
+    student = get_object_or_404(parent.children, id=student_id)
+    records = Attendance.objects.filter(student=student).order_by('-date')
+    return render(request, 'academics/child_attendance.html', {'records': records, 'student': student})
+
+
+@login_required
+@user_passes_test(is_parent)
+def child_results(request, student_id):
+    parent = Parent.objects.get(user=request.user)
+    student = get_object_or_404(parent.children, id=student_id)
+    records = Result.objects.filter(student=student).select_related('subject').order_by('-term')
+    return render(request, 'academics/child_results.html', {'records': records, 'student': student})
